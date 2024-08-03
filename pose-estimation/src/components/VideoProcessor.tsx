@@ -106,7 +106,7 @@ const VideoProcessor: React.FC = () => {
       videoRef.current.onloadeddata = async () => {
         if (canvasRef.current) {
           const canvas = canvasRef.current;
-          const ctx = canvas.getContext('2d')!;
+          //const ctx = canvas.getContext('2d')!;
           canvas.width = videoRef.current!.videoWidth;
           canvas.height = videoRef.current!.videoHeight;
 
