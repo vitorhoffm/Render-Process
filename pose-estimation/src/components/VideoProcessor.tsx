@@ -55,16 +55,16 @@ const VideoProcessor: React.FC = () => {
   const processVideo = async (file: File) => {
     setStatus('Processando frames, por favor aguarde...');
     setLoading(true);
-    setCsvUrl(null); 
-    setKeypoints([]); 
-    setCsvFileName(file.name.slice(0, 5) + '_pose_data.csv'); 
-
+    setCsvUrl(null);
+    setKeypoints([]);
+    setCsvFileName(file.name.slice(0, 5) + '_pose_data.csv');
+  
     if (videoRef.current) {
       videoRef.current.src = URL.createObjectURL(file);
       videoRef.current.load();
-
+  
       const pose = new Pose({
-        locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/pose/${file}`,
+        locateFile: (file) => `/node_modules/@mediapipe/pose/${file}`,
       });
       pose.setOptions({
         modelComplexity: 1,
@@ -74,16 +74,16 @@ const VideoProcessor: React.FC = () => {
         minDetectionConfidence: 0.5,
         minTrackingConfidence: 0.5,
       });
-
+  
       pose.onResults((results: Results) => {
         if (results.poseLandmarks && canvasRef.current) {
           const landmarks = results.poseLandmarks as NormalizedLandmarkList;
           const leftHip: [number, number] = [landmarks[POSE_LANDMARKS_LEFT.LEFT_HIP].x, landmarks[POSE_LANDMARKS_LEFT.LEFT_HIP].y];
           const leftKnee: [number, number] = [landmarks[POSE_LANDMARKS_LEFT.LEFT_KNEE].x, landmarks[POSE_LANDMARKS_LEFT.LEFT_KNEE].y];
           const leftAnkle: [number, number] = [landmarks[POSE_LANDMARKS_LEFT.LEFT_ANKLE].x, landmarks[POSE_LANDMARKS_LEFT.LEFT_ANKLE].y];
-
+  
           const angle = calculateAngle(leftHip, leftKnee, leftAnkle);
-
+  
           const keypoint = {
             frameID: keypoints.length,
             leftHip,
@@ -91,9 +91,9 @@ const VideoProcessor: React.FC = () => {
             leftAnkle,
             angle,
           };
-
+  
           setKeypoints((prevKeypoints) => [...prevKeypoints, keypoint]);
-
+  
           const ctx = canvasRef.current.getContext('2d');
           if (ctx) {
             ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
@@ -102,26 +102,25 @@ const VideoProcessor: React.FC = () => {
           }
         }
       });
-
+  
       videoRef.current.onloadeddata = async () => {
         if (canvasRef.current) {
           const canvas = canvasRef.current;
-          //const ctx = canvas.getContext('2d')!;
           canvas.width = videoRef.current!.videoWidth;
           canvas.height = videoRef.current!.videoHeight;
-
+  
           const processFrame = async () => {
             if (videoRef.current!.ended) {
               setStatus('Processamento concluído.');
               setLoading(false);
               return;
             }
-
+  
             await pose.send({ image: videoRef.current! });
             videoRef.current!.currentTime += 1 / 30;
-            setTimeout(processFrame, 0);
+            requestAnimationFrame(processFrame);
           };
-
+  
           processFrame();
           videoRef.current!.play();
         }
@@ -137,14 +136,14 @@ const VideoProcessor: React.FC = () => {
           `${item.frameID},${item.leftHip.join(';')},${item.leftKnee.join(';')},${item.leftAnkle.join(';')},${item.angle}`
         ))
         .join("\n");
-
+  
       const encodedUri = encodeURI(csvContent);
       setCsvUrl(encodedUri);
-
+  
       const audio = new Audio(AudioNotification); 
       audio.play();
     }
-  }, [loading, keypoints]);
+  }, [loading, keypoints, !loading]);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
