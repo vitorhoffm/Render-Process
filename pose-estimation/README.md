@@ -1,30 +1,43 @@
-# React + TypeScript + Vite
+# Render Process
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Pré-requisitos
 
-Currently, two official plugins are available:
+Antes de começar, você precisará ter o Node.js instalado em sua máquina. Você pode seguir as instruções abaixo para instalar.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### Instalação do Node.js
 
-## Expanding the ESLint configuration
+1. Acesse o link para download do Node.js: [Node.js Download](https://nodejs.org/en/download/package-manager/all)
+2. Siga as instruções específicas para o seu sistema operacional para instalar o Node.js.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+### Verificação da Instalação do Node.js
 
-- Configure the top-level `parserOptions` property like this:
+Após a instalação, abra o terminal e execute o seguinte comando para verificar se o Node.js foi instalado corretamente:
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json', './tsconfig.app.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+```sh
+node -v
+```
+Se o Node.js estiver instalado corretamente, o comando retornará a versão instalada do Node.js.
+
+### Instalação do Render Process
+
+1.Instale as dependências do projeto executando o comando abaixo:
+```sh
+npm install
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+### Execução
+
+Para rodar o projeto, execute o seguinte comando no terminal:
+```sh
+npm run dev
+```
+
+O comando acima iniciará o servidor de desenvolvimento. Normalmente, ele estará disponível em http://localhost:3000 (o endereço pode variar conforme a configuração do seu projeto).
+
+### Contribuição
+
+Se você quiser contribuir para o projeto, por favor, abra uma issue ou envie um pull request. Todas as contribuições são bem-vindas!
+
+
+
+
